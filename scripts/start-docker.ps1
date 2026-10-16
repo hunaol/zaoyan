@@ -91,6 +91,7 @@ if (-not (Test-Path -LiteralPath $envPath)) {
     @"
 MYSQL_PASSWORD=$(New-Secret)
 MYSQL_ROOT_PASSWORD=$(New-Secret)
+MYSQL_PORT=3307
 DEMO_USERNAME=demo
 DEMO_PASSWORD=$(New-Secret)
 OPERATOR_PASSWORD=$(New-Secret)

@@ -120,9 +120,43 @@ docker compose --env-file deploy/.env -f deploy/docker-compose.yml down
 
 `down` 停止并移除容器，但保留业务数据卷。**不要用 down -v 来日常停止项目，它会删除数据库及上传文件数据卷。**
 
-默认网页只发布到本机 `127.0.0.1:8088`。如端口冲突，在 `deploy/.env` 中设置 `WEB_PORT=其他空闲端口` 后重新启动。MySQL 和后端不直接发布宿主机端口。
+默认网页只发布到本机 `127.0.0.1:8088`，MySQL 只发布到本机 `127.0.0.1:3307`，后端通过网页代理访问。如端口冲突，在 `deploy/.env` 中设置 `WEB_PORT=其他空闲端口` 或 `MYSQL_PORT=其他空闲端口` 后重新启动。容器间的数据库连接仍使用 `mysql:3306`。
 
 镜像默认从 `docker.m.daocloud.io/library/` 获取，构建时使用已配置的依赖镜像源。如能直连 Docker Hub，可在 `deploy/.env` 设置 `IMAGE_PREFIX=docker.io/library/`。已有 MySQL 数据卷初始化后的数据库密码不要只改 `.env`，否则会造成数据库连接失败。
+
+### 5. 查看 Docker 中的数据库
+
+Docker Desktop 的 **Volumes → deploy_mysql_data** 是数据库文件的保存位置。查看表和记录，可以使用 Navicat，或在容器终端执行 SQL。
+
+**Navicat：**选择“连接 → MySQL”，新建连接：
+
+| 设置 | 填写内容 |
+| --- | --- |
+| 连接名 | 灶眼 AI |
+| 主机 | `127.0.0.1` |
+| 端口 | `3307`，或自己设置的 `MYSQL_PORT` |
+| 用户名 | `zaoyan` |
+| 密码 | 本机 `deploy/.env` 中的 `MYSQL_PASSWORD` |
+| 数据库 | `zaoyan` |
+
+点击“测试连接”，成功后打开 `zaoyan` 数据库。数据库密码与网页登录的 `DEMO_PASSWORD` 是不同的。
+
+**Docker Desktop 容器终端：**选择 **Containers → deploy → mysql-1 → Exec**（完整容器名为 `deploy-mysql-1`），运行：
+
+~~~sh
+mysql -uzaoyan -p zaoyan
+~~~
+
+按提示输入本机 `deploy/.env` 中的 `MYSQL_PASSWORD`，进入 `mysql>` 后执行：
+
+~~~sql
+SHOW TABLES;
+SELECT * FROM video_tasks LIMIT 20;
+SELECT * FROM count_events LIMIT 20;
+exit
+~~~
+
+也可以在 Windows PowerShell 或其他宿主机终端中执行 `docker exec -it deploy-mysql-1 mysql -uzaoyan -p zaoyan`，再输入同一个数据库密码。
 
 ## 方式二：自己安装依赖，原生运行（不用 Docker）
 
