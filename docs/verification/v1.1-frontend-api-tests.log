@@ -1,0 +1,20 @@
+PASS session serializes and clears
+PASS expired token not reused
+PASS corrupt storage is safe
+PASS Beijing minute and second input convert to UTC independently of host timezone
+PASS invalid date input rejected
+PASS tomorrow matches Beijing calendar
+PASS server pagination parameters and keyword encoding
+PASS batch review body preserves domain
+PASS upload includes capture time and actual stall ID without forcing multipart boundary
+PASS task cancel is POST
+PASS failed task retry is POST
+PASS forecast apply requires explicit overwrite flag
+PASS forecast history includes domain and meal
+PASS 204 response does not parse JSON
+PASS HTTP error retains backend message
+PASS 403 does not clear a valid login
+PASS 401 clears stale login and notifies shell
+PASS pre-aborted request is passed to fetch
+PASS evidence blob uses authenticated request
+{"status":"PASSED","tests":19,"scope":"frontend API unit tests; mocked network"}

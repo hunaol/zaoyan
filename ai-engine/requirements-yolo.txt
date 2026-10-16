@@ -1,0 +1,3 @@
+-r requirements.txt
+# 可选：YOLO+ByteTrack。使用前请确认 AGPL-3.0/商业授权义务。
+ultralytics>=8.3,<9

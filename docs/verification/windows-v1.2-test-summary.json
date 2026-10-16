@@ -1,0 +1,11 @@
+{
+  "version": "1.2.0",
+  "date": "2026-10-16",
+  "javaTests": 23,
+  "pythonTests": 57,
+  "frontendApiTests": 33,
+  "typescriptAndVite": "passed",
+  "isolatedBusinessGroups": 12,
+  "dockerColdStart": "passed",
+  "nativeHostEndToEnd": "not executed"
+}

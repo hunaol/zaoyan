@@ -1,0 +1,15 @@
+# The build context should not contain developer secrets or local dependencies.
+.git
+**/.git
+**/node_modules
+**/dist
+**/target
+**/.m2
+**/__pycache__
+**/.venv
+**/.env
+**/.env.*
+!**/.env.example
+*.bak
+**/backups
+**/docker-config-backup-*

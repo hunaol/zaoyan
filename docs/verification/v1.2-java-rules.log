@@ -1,0 +1,17 @@
+PASS defaults
+PASS legacy null
+PASS JSON roundtrip
+PASS rejects too small ROI
+PASS rejects line outside ROI
+PASS rejects review threshold
+PASS rejects missing nesting policy
+PASS rejects unknown policy
+PASS rejects frame range
+PASS rejects class collision
+PASS rejects uppercase class
+PASS rejects duplicate class
+PASS rejects empty target
+PASS rejects overlap meal
+PASS rejects cross midnight
+PASS rejects null meal slot
+COUNTING_RULES_CHECK: 16 passed; actual Java 21 + Jackson; no Spring or DB runtime

@@ -1,0 +1,34 @@
+PASS session serializes and clears
+PASS expired token not reused
+PASS corrupt storage is safe
+PASS Beijing minute and second input convert to UTC independently of host timezone
+PASS invalid date input rejected
+PASS tomorrow matches Beijing calendar
+PASS server pagination parameters and keyword encoding
+PASS batch review body preserves domain
+PASS upload includes capture time and actual stall ID without forcing multipart boundary
+PASS task cancel is POST
+PASS failed task retry is POST
+PASS forecast apply requires explicit overwrite flag
+PASS forecast history includes domain and meal
+PASS 204 response does not parse JSON
+PASS HTTP error retains backend message
+PASS 403 does not clear a valid login
+PASS 401 clears stale login and notifies shell
+PASS pre-aborted request is passed to fetch
+PASS evidence blob uses authenticated request
+PASS task history encodes all filters and an explicit first page
+PASS reanalysis creates a version rather than retrying old events
+PASS analysis activation retains operator reason
+PASS review transmits structured exception reason
+PASS position correction preserves idempotence key and offset
+PASS full review audit history is paginated and scoped
+PASS business audit is scoped and paginated
+PASS forecast history uses unbounded backend pagination
+PASS settlement draft preserves explicit units
+PASS draft reload survives page refresh
+PASS settlement confirmation never silently forces zero or overwrite
+PASS prep revision and manual override go to backend
+PASS calibration saves complete shared rules not just page state
+PASS risk display retains unknown future risk codes
+{"status":"PASSED","tests":33,"scope":"frontend API unit tests; mocked network"}

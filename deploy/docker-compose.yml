@@ -1,0 +1,86 @@
+name: deploy
+
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  mysql:
+    image: ${IMAGE_PREFIX:-docker.m.daocloud.io/library/}mysql:8.4
+    restart: unless-stopped
+    logging: *default-logging
+    environment:
+      MYSQL_DATABASE: zaoyan
+      MYSQL_USER: zaoyan
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?set MYSQL_PASSWORD in deploy/.env}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?set MYSQL_ROOT_PASSWORD in deploy/.env}
+      TZ: Asia/Shanghai
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 16
+    networks: [internal]
+  backend:
+    build:
+      context: ..
+      dockerfile: backend/Dockerfile
+      args:
+        IMAGE_PREFIX: ${IMAGE_PREFIX:-docker.m.daocloud.io/library/}
+        APT_MIRROR: ${APT_MIRROR:-https://mirrors.aliyun.com/ubuntu}
+        PIP_INDEX_URL: ${PIP_INDEX_URL:-https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple}
+    restart: unless-stopped
+    logging: *default-logging
+    environment:
+      DB_URL: jdbc:mysql://mysql:3306/zaoyan?useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
+      DB_USER: zaoyan
+      DB_PASSWORD: ${MYSQL_PASSWORD:?set MYSQL_PASSWORD in deploy/.env}
+      DEMO_USERNAME: ${DEMO_USERNAME:?set DEMO_USERNAME}
+      DEMO_PASSWORD: ${DEMO_PASSWORD:?set DEMO_PASSWORD}
+      OPERATOR_PASSWORD: ${OPERATOR_PASSWORD:?set OPERATOR_PASSWORD}
+      YOLO_WEIGHTS: ${YOLO_WEIGHTS:-}
+      TZ: Asia/Shanghai
+      JAVA_TOOL_OPTIONS: -Xms256m -Xmx768m
+    volumes:
+      - app_data:/app/data
+      - ./models:/app/models:ro
+    depends_on:
+      mysql:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "--max-time", "4", "http://127.0.0.1:8080/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 60s
+    networks: [internal]
+  frontend:
+    build:
+      context: ..
+      dockerfile: frontend/Dockerfile
+      args:
+        IMAGE_PREFIX: ${IMAGE_PREFIX:-docker.m.daocloud.io/library/}
+        NPM_REGISTRY: ${NPM_REGISTRY:-https://registry.npmmirror.com}
+    restart: unless-stopped
+    logging: *default-logging
+    ports:
+      - "${WEB_BIND:-127.0.0.1}:${WEB_PORT:-8088}:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+    networks: [internal]
+volumes:
+  mysql_data:
+  app_data:
+networks:
+  internal:
+    driver: bridge
