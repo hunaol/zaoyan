@@ -1,0 +1,145 @@
+/* ============================================================================
+   灶眼 AI · 设计令牌 v2
+   ----------------------------------------------------------------------------
+   方向：单色极简 + 数据主导，参照 Apple 官网的排版逻辑。
+
+   和 v1（青绿科研风）的根本区别：
+
+   1. 不是「换一套颜色」，而是**几乎不用颜色**。整站由黑、白、
+      三档灰构成。信息层级完全靠字号、字重和留白拉开，不靠色相。
+      彩色只保留极少量语义用途（成功/警告/危险），且降饱和、小块使用。
+
+   2. 排版成为主要设计手段。大标题到正文有 3 倍以上的字号落差
+      （48px → 15px），配合负字距和紧凑行高，形成 Apple 那种
+      「一眼看到重点」的节奏。中文字距单独收紧——汉字的天然字距
+      比拉丁字母宽，沿用西方站点的 letter-spacing 会显得松散。
+
+   3. 描边取代阴影做结构分隔，阴影只留给真正浮起来的层。
+      卡片默认无阴影，靠 1px 描边和留白立住。
+
+   4. 动效统一到一条曲线（Apple 常用的 ease-out-quint 变体），
+      时长 220ms。不做花哨的位移，只做透明度与 1–2px 的微位移。
+   ========================================================================== */
+
+:root {
+  /* --- 墨色阶：从纯黑到纯白，中性偏暖一点点，避免屏幕上的冷灰感 --- */
+  --ink: #0a0a0a;        /* 主文字、主按钮底、选中态底 */
+  --ink-hover: #262626;
+  --ink-active: #000000;
+  --ink-2: #404040;      /* 次强文字 */
+  --ink-3: #525252;      /* 正文次级、说明 */
+  --ink-4: #737373;      /* 弱化文字、单位 */
+  --ink-5: #a3a3a3;      /* 占位符、禁用 */
+  --ink-6: #c4c4c4;      /* 极弱标记 */
+
+  /* --- 面与线 --- */
+  --paper: #ffffff;      /* 卡片、浮层 */
+  --canvas: #fafafa;     /* 页面底 */
+  --canvas-2: #f4f4f5;   /* 次级底：表头、代码、标签底 */
+  --canvas-3: #ebebeb;   /* 悬停底、更深的块 */
+  --line: #ededed;       /* 常规描边 */
+  --line-2: #e0e0e0;     /* 稍强描边 */
+  --line-strong: #d4d4d4;/* 输入框、可选控件描边 */
+
+  /* --- 强调色：仅用于链接、焦点环与极少量数据强调 ---
+     主交互（按钮、选中态）一律用黑，这是 Apple 的做法：
+     彩色按钮会分散注意力，黑色按钮才是最强的“可点”信号。 */
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-soft: #eff6ff;
+  --accent-ring: rgba(37, 99, 235, 0.18);
+
+  /* --- 语义色：降饱和，只在状态标签等小面积出现 --- */
+  --ok: #15803d;
+  --ok-soft: #f0f9f2;
+  --ok-line: #cfe8d6;
+  --warn: #b45309;
+  --warn-soft: #fdf6ec;
+  --warn-line: #f0dcbe;
+  --danger: #b91c1c;
+  --danger-soft: #fdf0f0;
+  --danger-line: #f0cccc;
+  --info: #1d4ed8;
+  --info-soft: #eff6ff;
+  --info-line: #cfdffa;
+  --muted: #525252;
+  --muted-soft: #f4f4f5;
+  --muted-line: #e0e0e0;
+
+  /* --- 排版 ---
+     中文字体优先，拉丁字体只作为数字与英文的补充。 */
+  --font-sans: "HarmonyOS Sans SC", "MiSans", "PingFang SC", "Noto Sans SC",
+    "Source Han Sans SC", "Microsoft YaHei UI", "Microsoft YaHei",
+    -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "SFMono-Regular", "Cascadia Mono", Consolas,
+    "Liberation Mono", monospace;
+
+  /* 字号：大标题与正文的落差拉到 3 倍以上，这是「高级感」的主要来源 */
+  --fs-display: clamp(2.25rem, 3.2vw, 2.75rem); /* 36–44px 页面大标题 */
+  --fs-title: 1.5rem;      /* 24px 区块标题 */
+  --fs-h: 1.0625rem;       /* 17px 卡片标题 */
+  --fs-body: 0.9375rem;    /* 15px 正文 */
+  --fs-sm: 0.875rem;       /* 14px */
+  --fs-xs: 0.8125rem;      /* 13px 次要信息 */
+  --fs-label: 0.75rem;     /* 12px 标签、最小字号 */
+  --fs-num-xl: 3.25rem;    /* 52px 英雄数字 */
+  --fs-num: 2.125rem;      /* 34px 指标数字 */
+  --fs-num-sm: 1.5rem;     /* 24px 小指标 */
+
+  --lh-tight: 1.15;
+  --lh-snug: 1.35;
+  --lh-normal: 1.6;
+  --lh-relaxed: 1.75;
+
+  /* 中文收紧字距：负值只给大标题，正文保持 0 以免影响可读性 */
+  --ls-display: -0.028em;
+  --ls-title: -0.018em;
+  --ls-label: 0.08em;      /* 全大写英文标签用正字距 */
+
+  /* --- 间距：8px 栅格 --- */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.25rem;
+  --sp-6: 1.5rem;
+  --sp-8: 2rem;
+  --sp-10: 2.5rem;
+  --sp-12: 3rem;
+  --sp-16: 4rem;
+  --sp-20: 5rem;
+
+  /* --- 圆角：卡片走大圆角，控件中等，标签走胶囊 --- */
+  --r-card: 18px;
+  --r-card-sm: 12px;
+  --r-ctl: 10px;
+  --r-full: 999px;
+
+  /* --- 阴影：克制。默认卡片不用阴影，只用描边 --- */
+  --shadow-xs: 0 1px 2px rgba(10, 10, 10, 0.04);
+  --shadow-sm: 0 1px 3px rgba(10, 10, 10, 0.06);
+  --shadow-md: 0 8px 24px rgba(10, 10, 10, 0.07);
+  --shadow-lg: 0 24px 64px rgba(10, 10, 10, 0.14);
+  --shadow-focus: 0 0 0 3px var(--accent-ring);
+
+  /* --- 布局 --- */
+  --sidebar-w: 236px;
+  --topbar-h: 64px;
+  --content-max: 1280px;
+
+  /* --- 动效 --- */
+  --ease: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 140ms;
+  --dur: 220ms;
+  --dur-slow: 380ms;
+}
+
+/* 尊重系统的减少动效设置：不只是缩短时长，而是彻底关闭位移。 */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0ms;
+    --dur: 0ms;
+    --dur-slow: 0ms;
+  }
+}

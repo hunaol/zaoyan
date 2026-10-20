@@ -1,0 +1,193 @@
+/* ============================================================================
+   事件与人工复核
+   ----------------------------------------------------------------------------
+   一个页面里三件事：事件台账（可批量复核的表格）、完整复核审计、结算与版本审计。
+   三者用同一套分段标签切换，主次关系靠「表格密度 + 状态标签」表达，不靠色块。
+
+   结构：页头 → 统计口径说明 → 单一卡片内的三段视图 → 两个模态（补录 / 证据复核）。
+   ========================================================================== */
+
+/* --- 提示条 --------------------------------------------------------------- */
+/* .notice 是 flex 容器，图标必须 flex:none 否则会被压扁。 */
+
+.events-notice > svg {
+  flex: none;
+  margin-top: 2px;
+}
+
+/* --- 视图切换 ------------------------------------------------------------- */
+/* 复用外壳层的 .segmented，只补一个「用 aria-selected 而非 aria-pressed」的选中态。 */
+
+.events-tabs {
+  margin-bottom: var(--sp-5);
+}
+
+.events-tabs button[aria-selected="true"] {
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: var(--shadow-xs);
+}
+
+/* --- 筛选 ----------------------------------------------------------------- */
+
+.events-filters {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+  margin-bottom: var(--sp-4);
+}
+
+.events-search {
+  width: 260px;
+}
+
+@media (max-width: 640px) {
+  .events-search { width: 100%; }
+}
+
+/* --- 工具条（营业日期 / 任务筛选 / 整段录像） ------------------------------ */
+
+.events-tools {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+  padding: var(--sp-3) 0;
+  font-size: var(--fs-xs);
+  color: var(--ink-4);
+}
+
+.events-tools label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+/* 工具条里的控件统一压到 36px，避免按钮、日期、文字三者高度参差。 */
+.events-tools .input,
+.events-tools .btn {
+  height: 36px;
+  min-height: 36px;
+}
+
+.events-date {
+  width: auto;
+}
+
+.events-task {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  color: var(--ink-4);
+}
+
+.events-error {
+  margin-bottom: var(--sp-3);
+  font-size: var(--fs-xs);
+  color: var(--danger);
+}
+
+/* 卡片内的警告条：需要与下方的批量条 / 表格拉开距离。 */
+.events-alert {
+  margin-bottom: var(--sp-4);
+}
+
+/* --- 批量操作条 ----------------------------------------------------------- */
+
+.events-batch {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--sp-4);
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--canvas-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-card-sm);
+}
+
+.events-batch strong {
+  font-size: var(--fs-sm);
+  font-weight: 500;
+}
+
+/* --- 台账表格 ------------------------------------------------------------- */
+
+.events-ledger {
+  display: flex;
+  flex-direction: column;
+}
+
+.events-check-cell {
+  width: 44px;
+}
+
+.events-check {
+  width: 17px;
+  height: 17px;
+  accent-color: var(--ink);
+  cursor: pointer;
+}
+
+/* 核查提示列：标签可能换行，给一个上限避免把表格拉宽。 */
+.events-risk {
+  max-width: 240px;
+  white-space: normal;
+  line-height: var(--lh-snug);
+}
+
+.events-flag {
+  display: block;
+  margin-top: 2px;
+  font-size: var(--fs-label);
+  color: var(--danger);
+}
+
+/* --- 证据与复核模态 ------------------------------------------------------- */
+
+.events-modal {
+  width: min(920px, calc(100vw - 2rem));
+}
+
+/* 两个模态的关闭按钮在忙时会被禁用，补一个可见的禁用态。 */
+.events-dialog .icon-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.events-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+  font-size: var(--fs-xs);
+  color: var(--ink-4);
+}
+
+.events-video {
+  width: 100%;
+  max-height: 46vh;
+  border-radius: var(--r-card-sm);
+  background: var(--ink);
+}
+
+.events-hint {
+  font-size: var(--fs-xs);
+  color: var(--ink-4);
+  line-height: var(--lh-snug);
+}
+
+.events-risk-note {
+  margin-top: var(--sp-2);
+  font-size: var(--fs-xs);
+  color: var(--ink-4);
+}
+
+/* 操作按钮组：.stack 是拉伸对齐的列，按钮必须包一层 flex 行才不会被拉满宽。 */
+.events-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+}

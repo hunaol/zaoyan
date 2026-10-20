@@ -1,3 +1,5 @@
 # 基础演示算法和视频处理，不需要训练模型
 numpy>=1.26,<3
 opencv-python-headless>=4.8,<5
+# 标注渲染用 TrueType 字体，OpenCV 自带的 Hershey 字体无法绘制中文。
+Pillow>=10,<12

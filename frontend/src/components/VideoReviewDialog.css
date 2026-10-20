@@ -1,0 +1,113 @@
+/* ============================================================================
+   逐段复核与视频定位补录
+   ----------------------------------------------------------------------------
+   弹窗外壳（.backdrop / .modal / .modal-head / .modal-body / .modal-foot）
+   全部走 base.css，这里只补业务区块：播放器、位置行、事件表与底部动作。
+   ========================================================================== */
+
+.videorev-modal .modal-head h2 {
+  font-size: var(--fs-h);
+}
+
+.videorev-close:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* 提示条在弹窗里成块出现，统一给一个下边距，避免每个区块各写一遍。 */
+.videorev-modal .notice {
+  margin-bottom: var(--sp-4);
+}
+
+/* --- 录像信息与播放器 ----------------------------------------------------- */
+
+.videorev-meta {
+  margin-bottom: var(--sp-4);
+  font-size: var(--fs-sm);
+  color: var(--ink-3);
+}
+
+/* 与监测页的结果播放器同款：黑底、圆角、限制高度，超出的部分裁掉。 */
+.videorev-player {
+  margin-bottom: var(--sp-5);
+  border-radius: var(--r-card-sm);
+  overflow: hidden;
+  background: var(--ink);
+}
+
+.videorev-player video {
+  width: 100%;
+  max-height: 44vh;
+  background: var(--ink);
+}
+
+/* --- 播放位置与画面来源切换 ----------------------------------------------- */
+
+.videorev-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+  margin-bottom: var(--sp-5);
+}
+
+.videorev-toolbar strong {
+  font-size: var(--fs-sm);
+  font-weight: 500;
+}
+
+.videorev-warn {
+  margin-top: var(--sp-3);
+  font-size: var(--fs-xs);
+  color: var(--warn);
+}
+
+/* --- 事件表 --------------------------------------------------------------- */
+
+.videorev-subhead {
+  margin: var(--sp-6) 0 var(--sp-3);
+  padding-top: var(--sp-5);
+  border-top: 1px solid var(--line);
+  font-size: var(--fs-h);
+}
+
+/* 每行只有一个「定位」，用文字链保持表格安静。 */
+.videorev-action {
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  color: var(--ink-3);
+  white-space: nowrap;
+  transition: color var(--dur-fast) var(--ease);
+}
+
+.videorev-action:hover:not(:disabled) {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.videorev-action:disabled {
+  color: var(--ink-5);
+  cursor: not-allowed;
+}
+
+.videorev-note {
+  margin-top: var(--sp-5);
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--line);
+  font-size: var(--fs-label);
+  line-height: var(--lh-normal);
+  color: var(--ink-4);
+}
+
+/* --- 底部动作 ------------------------------------------------------------- */
+/* .modal-foot 默认右对齐；重试说明靠 margin-right:auto 顶到左侧。 */
+
+.videorev-foot-note {
+  margin-right: auto;
+  max-width: 46ch;
+  font-size: var(--fs-label);
+  line-height: var(--lh-snug);
+  color: var(--ink-4);
+}

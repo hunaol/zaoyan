@@ -1,0 +1,425 @@
+/* ============================================================================
+   灶眼 AI · 应用外壳
+   ----------------------------------------------------------------------------
+   侧栏 / 顶栏 / 内容区 / 页脚。
+
+   与 v1 的差别不只是换色：
+   - 去掉了侧栏底部的「让每份出餐都有迹可循」营销卡与页脚标语。
+     装饰性文案会稀释信息密度，也让界面显得像宣传页而不是工具。
+   - 数据域切换从两个并排按钮改成 iOS 式分段控件，选中态用白底浮起表示。
+   - 内容区改为定宽居中，页面左右不再贴边——大屏上这点留白是「高级感」的主要来源。
+   ========================================================================== */
+
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+  background: var(--canvas);
+}
+
+/* --- 侧栏 ----------------------------------------------------------------- */
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 40;
+  width: var(--sidebar-w);
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+  border-right: 1px solid var(--line);
+}
+
+.sidebar-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--topbar-h);
+  padding: 0 var(--sp-5);
+  flex: none;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  min-width: 0;
+}
+
+.brand-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  flex: none;
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 10px;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.brand-name {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  line-height: 1.25;
+}
+
+.brand-name span {
+  font-weight: 400;
+  color: var(--ink-4);
+  margin-left: 1px;
+}
+
+/* 品牌下方的英文副标题：小、灰、正字距。 */
+.brand-sub {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink-5);
+  line-height: 1.4;
+}
+
+.sidebar-nav {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: var(--sp-4) var(--sp-3);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nav-group-label {
+  padding: var(--sp-4) var(--sp-3) var(--sp-2);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-5);
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  height: 40px;
+  padding: 0 var(--sp-3);
+  border-radius: var(--r-ctl);
+  color: var(--ink-3);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+}
+
+.nav-item:hover {
+  background: var(--canvas-2);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+/* 选中态用墨底反白——比彩色高亮更克制，也更难被误认为可点击的次级按钮。 */
+.nav-item-active,
+.nav-item-active:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.nav-item svg {
+  flex: none;
+  opacity: 0.9;
+}
+
+.nav-item span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sidebar-foot {
+  flex: none;
+  padding: var(--sp-4) var(--sp-5);
+  border-top: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--fs-label);
+  color: var(--ink-4);
+}
+
+/* --- 主区 ----------------------------------------------------------------- */
+
+.main-shell {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  margin-left: var(--sidebar-w);
+}
+
+/* --- 顶栏 ----------------------------------------------------------------- */
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  height: var(--topbar-h);
+  padding: 0 var(--sp-8);
+  background: rgba(250, 250, 250, 0.82);
+  /* 毛玻璃顶栏：滚动时内容从下方透出，比实色条更轻。 */
+  backdrop-filter: blur(12px) saturate(180%);
+  border-bottom: 1px solid var(--line);
+}
+
+.topbar-left,
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  min-width: 0;
+}
+
+.topbar-context {
+  font-size: var(--fs-sm);
+  color: var(--ink-3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.topbar-context strong {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* --- 数据域分段控件 -------------------------------------------------------- */
+
+.segmented {
+  display: inline-flex;
+  padding: 3px;
+  background: var(--canvas-2);
+  border-radius: var(--r-ctl);
+  gap: 2px;
+}
+
+.segmented button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 var(--sp-3);
+  border-radius: 7px;
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  color: var(--ink-4);
+  transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease),
+    box-shadow var(--dur-fast) var(--ease);
+}
+
+.segmented button:hover {
+  color: var(--ink);
+}
+
+.segmented button[aria-pressed="true"] {
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: var(--shadow-xs);
+}
+
+/* 大号分段控件：用于页面内的主视图切换（如「视频上传 / 实时摄像头」），
+   比默认尺寸更接近标签页的份量，但仍保持分段控件的紧凑感。 */
+.segmented-lg {
+  padding: 4px;
+}
+
+.segmented-lg button {
+  height: 36px;
+  padding: 0 var(--sp-4);
+  font-size: var(--fs-sm);
+}
+
+/* 真实场景被选中时用一个小圆点提醒「这是真实数据」。 */
+.segmented .live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ink-4);
+}
+
+.segmented button[aria-pressed="true"] .live-dot {
+  background: var(--danger);
+}
+
+.user-chip {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: 3px var(--sp-3) 3px 3px;
+  border-radius: var(--r-full);
+  transition: background var(--dur-fast) var(--ease);
+}
+
+.user-chip:hover { background: var(--canvas-2); }
+
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  flex: none;
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 50%;
+  font-size: var(--fs-label);
+  font-weight: 600;
+}
+
+.user-meta {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+
+.user-meta strong {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+}
+
+.user-meta small {
+  font-size: 11px;
+  color: var(--ink-4);
+}
+
+/* --- 内容区 --------------------------------------------------------------- */
+
+.main-content {
+  flex: 1 1 auto;
+  width: 100%;
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: var(--sp-8) var(--sp-8) var(--sp-16);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-10);
+}
+
+/* --- 页面头 --------------------------------------------------------------- */
+/* 大标题 + 一句话说明 + 右侧操作。字号落差是这一层的主要设计手段。 */
+
+.page-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--sp-6);
+  flex-wrap: wrap;
+}
+
+.page-head h1 {
+  font-size: var(--fs-display);
+  font-weight: 600;
+  letter-spacing: var(--ls-display);
+  line-height: 1.1;
+}
+
+.page-head .page-desc {
+  margin-top: var(--sp-3);
+  font-size: var(--fs-sm);
+  color: var(--ink-4);
+  max-width: 68ch;
+}
+
+.page-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+}
+
+/* --- 数据域提示 ----------------------------------------------------------- */
+/* v1 是一条占满宽度的色条，视觉重量过高。改成一行小字，信息仍在但不抢戏。 */
+
+.origin-note {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--fs-label);
+  color: var(--ink-4);
+}
+
+.origin-note .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ink-5);
+  flex: none;
+}
+
+.origin-note[data-origin="REAL"] .dot { background: var(--danger); }
+
+/* --- 页脚 ----------------------------------------------------------------- */
+
+.app-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+  padding: var(--sp-5) var(--sp-8);
+  border-top: 1px solid var(--line);
+  font-size: var(--fs-label);
+  color: var(--ink-5);
+}
+
+/* --- 移动端 --------------------------------------------------------------- */
+
+.mobile-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 39;
+  background: rgba(10, 10, 10, 0.3);
+  border: none;
+  animation: fade-in var(--dur) var(--ease);
+}
+
+.mobile-only { display: none; }
+
+@media (max-width: 1024px) {
+  .mobile-only { display: inline-flex; }
+
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform var(--dur) var(--ease);
+    box-shadow: var(--shadow-lg);
+    border-right: none;
+  }
+
+  .sidebar-open { transform: none; }
+
+  .main-shell { margin-left: 0; }
+
+  .topbar { padding: 0 var(--sp-5); }
+
+  .main-content { padding: var(--sp-6) var(--sp-5) var(--sp-12); }
+
+  .app-footer { padding: var(--sp-5); }
+
+  .topbar-context { display: none; }
+}
+
+@media (max-width: 640px) {
+  .user-meta { display: none; }
+  .segmented button { padding: 0 var(--sp-2); }
+}

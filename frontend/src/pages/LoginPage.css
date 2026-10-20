@@ -1,0 +1,222 @@
+/* ============================================================================
+   登录页
+   ----------------------------------------------------------------------------
+   左黑右白的分栏。左侧承担品牌陈述，右侧只有表单。
+
+   黑底不是装饰：它把登录页和内部工作区在视觉上分开——进入系统后
+   整站是浅色的，登录页的那块黑是一个明确的「门外」信号。
+   ========================================================================== */
+
+.login {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  min-height: 100vh;
+  background: var(--paper);
+}
+
+/* --- 左侧品牌区 ----------------------------------------------------------- */
+
+.login-brand {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--sp-10);
+  padding: var(--sp-10) var(--sp-12);
+  background: var(--ink);
+  color: var(--paper);
+  position: relative;
+  overflow: hidden;
+}
+
+/* 一条极淡的对角光带。纯粹是让大面积黑不显得死板，
+   透明度低到几乎察觉不到，只在大屏上提供一点体积感。 */
+.login-brand::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    120% 80% at 85% 8%,
+    rgba(255, 255, 255, 0.07) 0%,
+    rgba(255, 255, 255, 0) 55%
+  );
+  pointer-events: none;
+}
+
+.login-brand-top,
+.login-brand-main,
+.login-brand-foot {
+  position: relative;
+  z-index: 1;
+}
+
+.login-brand-main {
+  max-width: 34rem;
+}
+
+.login-brand h1 {
+  font-size: clamp(2.25rem, 4vw, 3.25rem);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1.12;
+  color: var(--paper);
+}
+
+.login-brand-main > p {
+  margin-top: var(--sp-5);
+  font-size: var(--fs-body);
+  line-height: var(--lh-relaxed);
+  color: rgba(255, 255, 255, 0.62);
+  max-width: 30rem;
+}
+
+.login-points {
+  margin-top: var(--sp-10);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.login-points li {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-3);
+  font-size: var(--fs-sm);
+  color: rgba(255, 255, 255, 0.78);
+  padding-top: var(--sp-3);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.login-point-num {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  color: rgba(255, 255, 255, 0.4);
+  flex: none;
+}
+
+.login-brand-foot {
+  font-size: var(--fs-label);
+  color: rgba(255, 255, 255, 0.38);
+}
+
+/* 黑底上的品牌标识需要反色 */
+.brand-tone-light .brand-mark {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.brand-tone-light .brand-name { color: var(--paper); }
+.brand-tone-light .brand-name span { color: rgba(255, 255, 255, 0.5); }
+.brand-tone-light .brand-sub { color: rgba(255, 255, 255, 0.42); }
+
+/* --- 右侧表单区 ----------------------------------------------------------- */
+
+.login-form-side {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-10) var(--sp-6);
+}
+
+.login-form-wrap {
+  width: 100%;
+  max-width: 348px;
+}
+
+.login-form-wrap h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.login-form-desc {
+  margin-top: var(--sp-2);
+  font-size: var(--fs-sm);
+  color: var(--ink-4);
+}
+
+.login-form {
+  margin-top: var(--sp-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+}
+
+.login-form .btn {
+  width: 100%;
+  margin-top: var(--sp-1);
+}
+
+/* 密码框：把「显示密码」按钮叠在输入框右内侧。 */
+.login-password {
+  position: relative;
+}
+
+.login-password .input {
+  padding-right: 42px;
+}
+
+.login-reveal {
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  color: var(--ink-4);
+  transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+}
+
+.login-reveal:hover {
+  background: var(--canvas-2);
+  color: var(--ink);
+}
+
+.login-hint {
+  margin-top: var(--sp-8);
+  padding-top: var(--sp-5);
+  border-top: 1px solid var(--line);
+  font-size: var(--fs-xs);
+  line-height: var(--lh-relaxed);
+  color: var(--ink-4);
+}
+
+.login-hint code {
+  padding: 1px 5px;
+  background: var(--canvas-2);
+  border-radius: 5px;
+  font-size: 0.9em;
+  color: var(--ink-2);
+}
+
+/* --- 响应式 --------------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .login {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* 窄屏下品牌区退化成顶部一条，只留标识与标题。 */
+  .login-brand {
+    padding: var(--sp-8) var(--sp-6);
+    gap: var(--sp-8);
+  }
+
+  .login-brand h1 {
+    font-size: 1.75rem;
+  }
+
+  .login-brand-main > p,
+  .login-points,
+  .login-brand-foot {
+    display: none;
+  }
+
+  .login-form-side {
+    padding: var(--sp-8) var(--sp-6) var(--sp-12);
+    align-items: flex-start;
+  }
+}

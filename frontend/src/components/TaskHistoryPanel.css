@@ -1,0 +1,82 @@
+/* ============================================================================
+   完整监测任务历史
+   ----------------------------------------------------------------------------
+   筛选器 → 表格 → 分页 → 查重口径说明。表格与卡片外壳全部复用 base.css，
+   这里只写这一块特有的排版与紧凑行内操作。
+   ========================================================================== */
+
+.taskhist-filters {
+  display: grid;
+  grid-template-columns: minmax(180px, 1.4fr) repeat(3, minmax(130px, 1fr));
+  gap: var(--sp-3);
+  align-items: end;
+  margin-bottom: var(--sp-5);
+  padding-bottom: var(--sp-5);
+  border-bottom: 1px solid var(--line);
+}
+
+@media (max-width: 900px) {
+  .taskhist-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 560px) {
+  .taskhist-filters { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* --- 单元格内的两行信息 --------------------------------------------------- */
+
+.taskhist-name {
+  display: block;
+}
+
+.taskhist-sub {
+  display: block;
+  margin-top: 2px;
+}
+
+/* --- 行内操作 ------------------------------------------------------------- */
+/* 表格里一列放三个动作，用文字链而不是按钮，避免一行出现三个黑框。 */
+
+.taskhist-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+}
+
+.taskhist-action {
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  color: var(--ink-3);
+  white-space: nowrap;
+  transition: color var(--dur-fast) var(--ease);
+}
+
+.taskhist-action:hover:not(:disabled) {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.taskhist-action:disabled {
+  color: var(--ink-5);
+  cursor: not-allowed;
+}
+
+/* --- 空结果与口径说明 ----------------------------------------------------- */
+
+.taskhist-empty {
+  padding: var(--sp-12) var(--sp-6);
+  text-align: center;
+  font-size: var(--fs-sm);
+  color: var(--ink-4);
+}
+
+.taskhist-note {
+  margin-top: var(--sp-5);
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--line);
+  font-size: var(--fs-label);
+  line-height: var(--lh-normal);
+  color: var(--ink-4);
+}

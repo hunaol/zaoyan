@@ -1,0 +1,249 @@
+/* ============================================================================
+   经营驾驶舱
+   ----------------------------------------------------------------------------
+   数据主导的版面：指标 → 主图 → 明细 → 引导，自上而下重要性递减。
+   ========================================================================== */
+
+.dash-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.dash-section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-5);
+  flex-wrap: wrap;
+}
+
+.dash-section-head h2 {
+  font-size: var(--fs-title);
+  letter-spacing: -0.02em;
+}
+
+.dash-section-head > span {
+  font-size: var(--fs-xs);
+  color: var(--ink-4);
+}
+
+/* --- 图表 ----------------------------------------------------------------- */
+
+.chart {
+  height: 200px;
+  /* recharts 在容器尺寸为 0 时不会渲染，给一个最小高度兜底。 */
+  min-height: 160px;
+}
+
+.chart-lg {
+  height: 264px;
+}
+
+.chart-legend {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--fs-xs);
+  color: var(--ink-4);
+  white-space: nowrap;
+}
+
+.chart-legend > span {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--ink);
+}
+
+.chart-tip {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--r-ctl);
+  box-shadow: var(--shadow-sm);
+  font-size: var(--fs-xs);
+}
+
+.chart-tip span {
+  color: var(--ink-4);
+  font-size: var(--fs-label);
+}
+
+.chart-tip strong {
+  font-variant-numeric: tabular-nums;
+}
+
+.dash-foot {
+  margin-top: var(--sp-4);
+  padding-top: var(--sp-3);
+  border-top: 1px solid var(--line);
+  font-size: var(--fs-label);
+  color: var(--ink-4);
+}
+
+/* --- 双栏区 --------------------------------------------------------------- */
+
+.dash-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--sp-4);
+  align-items: start;
+}
+
+@media (max-width: 980px) {
+  .dash-split { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* --- 事件动态列表 --------------------------------------------------------- */
+
+.feed {
+  display: flex;
+  flex-direction: column;
+}
+
+.feed-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3) 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.feed-row:last-child { border-bottom: none; }
+.feed-row:first-child { padding-top: 0; }
+
+.feed-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  flex: none;
+  border-radius: 8px;
+  background: var(--canvas-2);
+  color: var(--ink-4);
+}
+
+.feed-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.feed-body strong {
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.feed-body small {
+  font-size: var(--fs-label);
+  color: var(--ink-4);
+}
+
+/* 文字链 .text-link 定义在全局层（base.css），多个页面共用。 */
+
+/* --- 三步引导 ------------------------------------------------------------- */
+
+.dash-guide {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-6);
+}
+
+.dash-guide-head h3 {
+  font-size: var(--fs-h);
+}
+
+.dash-guide-head p {
+  margin-top: 3px;
+  font-size: var(--fs-xs);
+  color: var(--ink-4);
+}
+
+/* 横向三步。窄屏折成一列。 */
+.dash-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--sp-3);
+}
+
+@media (max-width: 780px) {
+  .dash-steps { grid-template-columns: minmax(0, 1fr); }
+}
+
+.dash-step {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  border: 1px solid var(--line);
+  border-radius: var(--r-card-sm);
+  text-align: left;
+  transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
+}
+
+.dash-step:hover {
+  border-color: var(--line-strong);
+  background: var(--canvas);
+}
+
+.dash-step > svg {
+  color: var(--ink-5);
+  flex: none;
+  transition: transform var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+
+.dash-step:hover > svg {
+  color: var(--ink);
+  transform: translateX(2px);
+}
+
+.dash-step-num {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  color: var(--ink-5);
+  flex: none;
+}
+
+.dash-step-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex: none;
+  border-radius: 9px;
+  background: var(--canvas-2);
+  color: var(--ink-3);
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+
+.dash-step:hover .dash-step-icon {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.dash-step-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.dash-step-text strong {
+  font-size: var(--fs-sm);
+  font-weight: 500;
+}
+
+.dash-step-text small {
+  font-size: var(--fs-label);
+  color: var(--ink-4);
+}

@@ -23,7 +23,8 @@ RUN set -eux; \
     done; \
     apt-get -o Acquire::Retries=4 update; \
     DEBIAN_FRONTEND=noninteractive apt-get -o Acquire::Retries=4 install -y --no-install-recommends \
-      curl python3 python3-pip python3-venv ffmpeg libglib2.0-0 libgl1; \
+      curl python3 python3-pip python3-venv ffmpeg libglib2.0-0 libgl1 \
+      fonts-wqy-microhei; \
     rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 COPY ai-engine /app/ai-engine

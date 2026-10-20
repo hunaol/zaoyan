@@ -41,13 +41,27 @@ def evaluate(reference: list[dict], prediction: list[dict], tolerance: float=.5)
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--reference',required=True);parser.add_argument('--prediction',required=True)
+    parser.add_argument('--reference');parser.add_argument('--prediction')
+    parser.add_argument('--tracks',help='per-frame MOT annotations, JSON array of {"gt": [...], "pred": [...]}')
+    parser.add_argument('--iou-threshold',type=float,default=.5,help='IoU threshold for tracking metrics (only used with --tracks)')
     parser.add_argument('--output',required=True);parser.add_argument('--tolerance',type=float,default=.5)
     args=parser.parse_args()
-    truth=json.loads(Path(args.reference).read_text(encoding='utf-8'))
-    guess=json.loads(Path(args.prediction).read_text(encoding='utf-8'))
-    if not isinstance(truth,list) or not isinstance(guess,list):parser.error('inputs must be JSON arrays')
-    result=evaluate(truth,guess,args.tolerance)
+    if args.tracks:
+        # 跟踪指标与事件匹配是两套口径：给了 --tracks 就走 MOT 分支，不再要求
+        # --reference/--prediction，避免调用方为了量跟踪质量去凑两份无关的标注文件。
+        from .tracking_metrics import evaluate_tracking
+        payload=json.loads(Path(args.tracks).read_text(encoding='utf-8'))
+        frames=payload.get('frames') if isinstance(payload,dict) else payload
+        if not isinstance(frames,list):parser.error('--tracks must be a JSON array of frames')
+        try:result=evaluate_tracking(frames,args.iou_threshold)
+        except ValueError as error:parser.error(str(error))
+    else:
+        if not args.reference or not args.prediction:
+            parser.error('--reference and --prediction are required unless --tracks is given')
+        truth=json.loads(Path(args.reference).read_text(encoding='utf-8'))
+        guess=json.loads(Path(args.prediction).read_text(encoding='utf-8'))
+        if not isinstance(truth,list) or not isinstance(guess,list):parser.error('inputs must be JSON arrays')
+        result=evaluate(truth,guess,args.tolerance)
     output=Path(args.output);output.parent.mkdir(parents=True,exist_ok=True)
     output.write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
     print(json.dumps(result,ensure_ascii=False))

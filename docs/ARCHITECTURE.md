@@ -15,7 +15,7 @@
 
 ```mermaid
 flowchart TD
-  A[React+TS+Tailwind] -->|REST+Bearer| B[Spring Boot]
+  A[React 19 + TS + 自研设计系统] -->|REST+Bearer| B[Spring Boot]
   B --> C[(MySQL 8 / 开发H2)]
   B -->|异步 ProcessBuilder| D[Python 视频任务]
   D -->|JSON + H264 MP4| B
@@ -24,6 +24,26 @@ flowchart TD
   B -->|异步 ProcessBuilder| F[Python 备餐预测]
   F -->|可解释 JSON| B
 ```
+
+## 视觉算法分层
+
+`ai-engine/zaoyan_ai/vision.py` 是对外门面，只负责保持稳定的公开 API
+（`Detection` / `CentroidTracker` / `Detector` / `LineCounter` /
+`select_targets` / `draw_annotations`）。真正的实现按职责拆分为：
+
+| 模块 | 职责 | 关键设计 |
+| --- | --- | --- |
+| `segmenter.py` | 自适应色块分割与候选几何过滤 | 用带界约束的统计替代写死的 HSV 区间：种子区间是安全网，前若干帧据实收紧密度边界后冻结，避免逐帧漂移导致检测闪烁。开/闭运算核随分辨率缩放；距离变换 + 分水岭拆分粘连目标；填充率、凸度、长宽比、边缘截断共同决定置信度 |
+| `tracker.py` | 多目标跟踪 | 每条轨迹一个匀速 Kalman 滤波器（状态 `[cx,cy,w,h,vx,vy,vw,vh]`），关联代价 `1 - IoU`，Hungarian 求全局最优指派，中心距门限按画面高度归一化。自带 Hungarian 实现，不引入 SciPy |
+| `linecross.py` | 越线状态机 | 有向线段符号距离 + 段内投影 + 线性插值求交点；速度外推用于遮挡期；诊断标记按单次越线作用域收集，不再永久累积污染 `riskReasons` |
+| `annotate.py` | 标注渲染 | Pillow + 系统 TrueType 字体渲染中文（OpenCV 的 Hershey 字体无法绘制 CJK）；ROI 外置黑而非整片涂黑；HUD 与图例按画面尺寸等比缩放 |
+
+**为什么不再是硬编码 HSV**：原实现的 `[75,80,55]-[105,255,255]` 对灯光、
+白平衡和餐盒色号的变化毫无余地，一次现场换灯就整体漏检。自适应版本在
+保持同一条青绿色验证基线的前提下，把阈值从常量变成由数据估计的区间。
+
+**这仍然是经典视觉基线**，不代表真实食堂场景的检测精度；真实识别需要
+自训 YOLO 权重并另行做场景验证。
 
 ## 数据库表
 
@@ -80,6 +100,32 @@ flowchart TD
 - `/planning`：备餐录入、可解释预测、安全缓冲设置、历史记录、可选模拟样本填充。
 - `/reports`：日期筛选、日报统计、备餐明细、CSV 导出。
 - `/settings`：名称、位置、计数线位置和方向、隐私策略。
+
+## 前端样式架构
+
+样式按职责分层，全部为手写语义类：
+
+| 文件 | 内容 |
+| --- | --- |
+| `styles/tokens.css` | 设计令牌：中性偏冷色阶、品牌绿、语义色、字阶、4px 间距栅格、圆角、阴影、动效时长 |
+| `styles/base.css` | 自足重置 + 跨页面原语（按钮、卡片、表单、徽标、表格、弹层、骨架屏） |
+| `styles/shell.css` | 应用外壳：侧栏、顶栏、数据域横幅、内容区、页脚、响应式断点 |
+| `styles/pages-core.css` | 经营驾驶舱、AI 出餐监测 |
+| `styles/pages-forms.css` | 事件复核、智能备餐、数据报表、系统设置 |
+| `styles/pages-misc.css` | 登录页、通知中心外观 |
+
+三个刻意的取舍：
+
+1. **不再依赖 Tailwind / PostCSS。** 原项目所有样式都是手写语义类，Tailwind
+   仅承担重置职责；而且 postcss 会在被 Vite 监视的 `src` 目录内创建临时文件，
+   实测触发过 `EBUSY: resource busy or locked` 让整个 fs watcher 崩溃。
+2. **移除 Google Fonts 的 `@import`。** 那是渲染阻塞的外部请求，在离线或受限
+   网络下会拖住首屏；改用系统 CJK 字体栈（PingFang / 微软雅黑 / HarmonyOS Sans）。
+3. **最小字号 12px。** 原实现大量使用 9–11px，中文在该尺寸下可读性很差。
+
+实时摄像头逻辑从页面抽到 `lib/useLiveCamera.ts`：会话代次票据、
+帧上传闸门、ROI 遮罩与画布叠绘原本和渲染交织在一个组件里，
+抽出后各自可独立推理与测试。
 
 ## 尚未实现或需要后续加强
 

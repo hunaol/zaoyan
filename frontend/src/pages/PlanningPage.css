@@ -1,0 +1,288 @@
+/* ============================================================================
+   智能备餐中心
+   ----------------------------------------------------------------------------
+   单列流程：结算草稿 → 台账登记 / 编辑 → 需求预测 → 对照图 + 历史 → 预测记录。
+   v1 在表单右侧放了一块深绿色「FORECAST RULE」大卡，占掉半屏却是纯说明文案；
+   现在压成页尾的一段小字列表。图表同步换成单色方案（浅灰 / 黑）。
+   ========================================================================== */
+
+/* --- 台账表单 ------------------------------------------------------------- */
+
+.plan-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--sp-4);
+}
+
+.plan-form .full {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 720px) {
+  .plan-form { grid-template-columns: minmax(0, 1fr); }
+  .plan-form .full { grid-column: auto; }
+}
+
+.plan-override {
+  margin-top: var(--sp-4);
+}
+
+.plan-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-top: var(--sp-5);
+  flex-wrap: wrap;
+}
+
+.plan-warn {
+  margin-top: var(--sp-4);
+}
+
+/* .notice 是 flex 容器，图标不加 flex:none 会被文字压扁。 */
+.plan-notice > svg {
+  flex: none;
+  margin-top: 2px;
+}
+
+/* --- 预测控制区 ----------------------------------------------------------- */
+
+.plan-predict {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--sp-5);
+  margin-bottom: var(--sp-5);
+  flex-wrap: wrap;
+}
+
+.plan-field-sm {
+  width: 200px;
+  flex: none;
+}
+
+.plan-buffer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  flex: 1 1 200px;
+  min-width: 160px;
+}
+
+.plan-buffer .field-label strong {
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- 预测结果 ------------------------------------------------------------- */
+
+/* 与 .settle-metrics 同构：数字大、标签小，靠落差制造重点。 */
+.plan-forecast-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--sp-5);
+  padding-top: var(--sp-5);
+  border-top: 1px solid var(--line);
+}
+
+@media (max-width: 560px) {
+  .plan-forecast-stats { grid-template-columns: minmax(0, 1fr); }
+}
+
+.plan-note {
+  margin-top: var(--sp-3);
+  font-size: var(--fs-xs);
+  line-height: var(--lh-snug);
+  color: var(--ink-4);
+}
+
+.plan-disclosure {
+  margin-top: var(--sp-5);
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--line);
+}
+
+.plan-disclosure > summary {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  font-size: var(--fs-xs);
+  color: var(--ink-4);
+}
+
+.plan-disclosure > summary::-webkit-details-marker {
+  display: none;
+}
+
+.plan-disclosure > summary::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  flex: none;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(-45deg);
+  transition: transform var(--dur) var(--ease);
+}
+
+.plan-disclosure[open] > summary::before {
+  transform: rotate(45deg);
+}
+
+.plan-disclosure > summary:hover {
+  color: var(--ink);
+}
+
+.plan-snapshot {
+  margin-top: var(--sp-3);
+  padding: var(--sp-4);
+  max-height: 320px;
+  overflow-x: auto;
+  border-radius: var(--r-ctl);
+  background: var(--canvas-2);
+  font-size: var(--fs-label);
+  line-height: 1.6;
+  color: var(--ink-3);
+}
+
+/* --- 双栏区 --------------------------------------------------------------- */
+
+.plan-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--sp-4);
+  align-items: start;
+}
+
+@media (max-width: 980px) {
+  .plan-split { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* --- 对照图表 ------------------------------------------------------------- */
+
+.plan-chart {
+  height: 240px;
+  /* recharts 在容器高度为 0 时不渲染，给一个兜底高度。 */
+  min-height: 200px;
+}
+
+.plan-legend {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+  font-size: var(--fs-label);
+  color: var(--ink-4);
+  white-space: nowrap;
+}
+
+.plan-legend > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.plan-legend i {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  flex: none;
+}
+
+.plan-legend .is-prepared { background: #d4d4d4; }
+.plan-legend .is-actual { background: #0a0a0a; }
+
+.plan-tip {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--r-ctl);
+  box-shadow: var(--shadow-sm);
+  font-size: var(--fs-xs);
+}
+
+.plan-tip > span {
+  font-size: var(--fs-label);
+  color: var(--ink-4);
+}
+
+.plan-tip strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+}
+
+.plan-tip i {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  flex: none;
+}
+
+/* --- 表格内的行内元素 ----------------------------------------------------- */
+
+.plan-cell-sub {
+  display: block;
+  margin-top: 2px;
+  font-size: var(--fs-label);
+  color: var(--ink-4);
+}
+
+.plan-action {
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  color: var(--ink-3);
+  white-space: nowrap;
+  transition: color var(--dur-fast) var(--ease);
+}
+
+.plan-action:hover {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* --- 预测口径（页尾） ----------------------------------------------------- */
+
+.plan-rules {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.plan-rules-lead {
+  font-size: var(--fs-sm);
+  line-height: var(--lh-snug);
+  color: var(--ink-3);
+  max-width: 76ch;
+}
+
+.plan-rules-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  margin-top: var(--sp-1);
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--line);
+}
+
+.plan-rules-list li {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-3);
+  font-size: var(--fs-xs);
+  line-height: var(--lh-snug);
+  color: var(--ink-3);
+}
+
+.plan-rules-list li > span {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  color: var(--ink-5);
+}

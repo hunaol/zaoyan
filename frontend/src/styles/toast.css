@@ -1,0 +1,43 @@
+/* ============================================================================
+   通知中心（sonner）
+   ----------------------------------------------------------------------------
+   把 sonner 的默认视觉对齐到本站设计系统：小圆角、细描边、克制阴影。
+   默认样式偏「移动端 toast」，圆角和阴影都偏大，放进这套界面里会显得松垮。
+   ========================================================================== */
+
+.app-toaster {
+  --normal-bg: var(--paper);
+  --normal-border: var(--line);
+  --normal-text: var(--ink);
+  --success-bg: var(--paper);
+  --success-border: var(--ok-line);
+  --success-text: var(--ok);
+  --error-bg: var(--paper);
+  --error-border: var(--danger-line);
+  --error-text: var(--danger);
+  --warning-bg: var(--paper);
+  --warning-border: var(--warn-line);
+  --warning-text: var(--warn);
+  font-family: var(--font-sans);
+}
+
+.app-toaster [data-sonner-toast] {
+  border-radius: var(--r-ctl);
+  box-shadow: var(--shadow-md);
+  font-size: var(--fs-xs);
+  padding: var(--sp-3) var(--sp-4);
+}
+
+.app-toaster [data-sonner-toast] [data-title] {
+  font-weight: 500;
+  line-height: var(--lh-snug);
+}
+
+.app-toaster [data-sonner-toast] [data-description] {
+  color: var(--ink-4);
+}
+
+.app-toaster [data-sonner-toast] [data-button],
+.app-toaster [data-sonner-toast] [data-close-button] {
+  border-radius: 7px;
+}

@@ -1,0 +1,73 @@
+/* ============================================================================
+   复核审计面板
+   ----------------------------------------------------------------------------
+   两个面板共用一套版式：工具条 + 表格 + 分页。
+   AuditPanel 嵌在卡片里（事件页签）或证据模态里，所以不自己带卡片外壳。
+   ========================================================================== */
+
+.audit-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- 工具条 --------------------------------------------------------------- */
+
+.audit-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+  padding: var(--sp-3) 0;
+  margin-bottom: var(--sp-2);
+  font-size: var(--fs-xs);
+  color: var(--ink-4);
+}
+
+.audit-toolbar label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.audit-date,
+.audit-search {
+  height: 36px;
+  min-height: 36px;
+  width: auto;
+}
+
+.audit-search {
+  width: 220px;
+}
+
+@media (max-width: 640px) {
+  .audit-search { width: 100%; }
+}
+
+/* --- 表格 ----------------------------------------------------------------- */
+
+/* 状态变化列：两个状态标签之间的箭头。 */
+.audit-flow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  white-space: nowrap;
+}
+
+.audit-arrow {
+  color: var(--ink-5);
+  font-size: var(--fs-xs);
+}
+
+.audit-reason {
+  display: block;
+  margin-bottom: 2px;
+  font-size: var(--fs-label);
+  color: var(--ink-4);
+}
+
+.audit-note {
+  font-size: var(--fs-xs);
+  color: var(--ink-4);
+  padding: var(--sp-5) 0;
+}

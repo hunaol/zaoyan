@@ -1,0 +1,175 @@
+/* ============================================================================
+   档口与算法设置
+   ----------------------------------------------------------------------------
+   v1 是 5 个纵向大块，整页高到 3000px。新版把「场景口径 + 画面标定」并成
+   两栏，其余区块用自适应网格排布，控制纵向长度。
+   ========================================================================== */
+
+/* --- 场景口径 + 画面标定 -------------------------------------------------- */
+
+.settings-split {
+  display: grid;
+  grid-template-columns: minmax(0, 360px) minmax(0, 1fr);
+  gap: var(--sp-4);
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .settings-split { grid-template-columns: minmax(0, 1fr); }
+}
+
+.settings-fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+/* --- 规则字段 ------------------------------------------------------------- */
+
+.settings-rules {
+  /* 比默认 240px 更窄，7 个字段一行能放下更多，减少纵向长度。 */
+  --col-min: 200px;
+}
+
+.settings-labels {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--sp-4);
+  margin-top: var(--sp-4);
+}
+
+@media (max-width: 780px) {
+  .settings-labels { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* --- 餐次时间 ------------------------------------------------------------- */
+
+.settings-meals {
+  gap: var(--sp-5);
+}
+
+.settings-meal-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.settings-meal-row .input {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.settings-meal-row > span {
+  flex: none;
+  font-size: var(--fs-xs);
+  color: var(--ink-4);
+}
+
+/* --- 运行状态与隐私边界 --------------------------------------------------- */
+
+.settings-runtime {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--sp-4);
+}
+
+@media (max-width: 720px) {
+  .settings-runtime { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+.settings-runtime-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.settings-runtime-cell > span {
+  font-size: var(--fs-label);
+  color: var(--ink-4);
+}
+
+.settings-runtime-cell > strong {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.settings-policy {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--sp-5);
+  margin-top: var(--sp-6);
+}
+
+@media (max-width: 720px) {
+  .settings-policy { grid-template-columns: minmax(0, 1fr); }
+}
+
+.settings-policy-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--line);
+}
+
+.settings-policy-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  margin-bottom: var(--sp-1);
+  border-radius: 8px;
+  background: var(--canvas-2);
+  color: var(--ink-3);
+}
+
+.settings-policy-item > strong {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+}
+
+.settings-policy-item > p {
+  font-size: var(--fs-xs);
+  color: var(--ink-4);
+  line-height: var(--lh-snug);
+}
+
+/* --- 说明文字 ------------------------------------------------------------- */
+
+.settings-note {
+  margin-top: var(--sp-5);
+  padding-top: var(--sp-3);
+  border-top: 1px solid var(--line);
+  font-size: var(--fs-label);
+  line-height: var(--lh-snug);
+  color: var(--ink-4);
+}
+
+/* --- 保存条 --------------------------------------------------------------- */
+
+.settings-savebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-5);
+  flex-wrap: wrap;
+}
+
+.settings-savebar > div {
+  min-width: 0;
+}
+
+.settings-savebar > div > strong {
+  display: block;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+}
+
+.settings-savebar > div > p {
+  margin-top: 3px;
+  font-size: var(--fs-xs);
+  color: var(--ink-4);
+}

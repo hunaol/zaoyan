@@ -1,0 +1,165 @@
+/* ============================================================================
+   结算草稿面板（从事件复核生成备餐台账）
+   ----------------------------------------------------------------------------
+   与备餐台账页同一个容器宽度，作为页面里的第一块卡片。纵向节奏交给外层
+   flex gap，内部成组的元素（工具条 + 说明、指标 + 时段说明）再自行贴紧。
+   ========================================================================== */
+
+.settle-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+}
+
+/* 卡片标题的默认下边距由外层 gap 接管，避免出现双倍间距。 */
+.settle-panel .card-head {
+  margin-bottom: 0;
+}
+
+.settle-block {
+  display: flex;
+  flex-direction: column;
+}
+
+/* .notice 是 flex 容器，图标不加 flex:none 会被文字压扁。 */
+.settle-notice > svg {
+  flex: none;
+  margin-top: 2px;
+}
+
+/* --- 换算倍率 + 生成草稿 --------------------------------------------------- */
+
+.settle-toolbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+}
+
+.settle-ratio {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+  font-size: var(--fs-xs);
+  color: var(--ink-2);
+}
+
+.settle-ratio .input {
+  width: 88px;
+  flex: none;
+}
+
+.settle-help {
+  margin-top: var(--sp-3);
+  font-size: var(--fs-label);
+  line-height: var(--lh-snug);
+  color: var(--ink-4);
+  max-width: 84ch;
+}
+
+/* --- 草稿指标 ------------------------------------------------------------- */
+
+.settle-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--sp-4);
+  padding-top: var(--sp-5);
+  border-top: 1px solid var(--line);
+}
+
+@media (max-width: 860px) {
+  .settle-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 460px) {
+  .settle-metrics { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* 这里的指标是过程数据，不用页面的 34px 英雄字号。 */
+.settle-metrics .stat-value {
+  font-size: var(--fs-num-sm);
+}
+
+.settle-note {
+  margin-top: var(--sp-3);
+  font-size: var(--fs-xs);
+  line-height: var(--lh-snug);
+  color: var(--ink-4);
+}
+
+/* --- 录像覆盖明细 --------------------------------------------------------- */
+
+.settle-disclosure {
+  border-top: 1px solid var(--line);
+  padding-top: var(--sp-3);
+}
+
+.settle-disclosure > summary {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  font-size: var(--fs-xs);
+  color: var(--ink-4);
+}
+
+.settle-disclosure > summary::-webkit-details-marker {
+  display: none;
+}
+
+.settle-disclosure > summary::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  flex: none;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(-45deg);
+  transition: transform var(--dur) var(--ease);
+}
+
+.settle-disclosure[open] > summary::before {
+  transform: rotate(45deg);
+}
+
+.settle-disclosure > summary:hover {
+  color: var(--ink);
+}
+
+.settle-disclosure .table-wrap {
+  margin-top: var(--sp-4);
+}
+
+/* --- 确认清单 ------------------------------------------------------------- */
+
+.settle-checks {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.settle-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+}
+
+/* --- 行内链接 ------------------------------------------------------------- */
+
+.settle-link {
+  display: inline;
+  margin: 0 4px;
+  font-weight: 500;
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.settle-link:hover {
+  color: var(--ink-2);
+}
